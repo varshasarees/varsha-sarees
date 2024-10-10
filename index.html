@@ -1,0 +1,114 @@
+<html>
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
+    <style>
+      #playPauseButtonContainer {
+        position: absolute;
+        bottom: 20px;
+        right: 20px;
+        text-align: center;
+        z-index: 999;
+      }
+
+      #playPauseButton {
+        width: 50px;
+        height: 50px;
+        background: url('https://cdn-icons-png.flaticon.com/512/109/109197.png') no-repeat center center;
+        background-size: contain;
+        border: 2px solid #ffffff;
+        border-radius: 30%;
+        cursor: pointer;
+        outline: none;
+      }
+
+      #playPauseButton:hover {
+        background-color: rgba(0, 0, 0, 0.3);
+      }
+
+      #playPauseText {
+        margin-top: 5px;
+        font-size: 14px;
+        color: #ffffff;
+      }
+
+      /* Hide the VR button */
+      .a-enter-vr-button {
+        display: none !important;
+      }
+    </style>
+  </head>
+  <body>
+    <a-scene
+      mindar-image="imageTargetSrc: ./targets.mind"
+      color-space="sRGB"
+      renderer="colorManagement: true, physicallyCorrectLights"
+      vr-mode-ui="enabled: false"
+      device-orientation-permission-ui="enabled: false">
+      
+      <a-assets>
+        <video id="video1" src="video1.mp4" playsinline muted loop></video>
+      </a-assets>
+
+      <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
+
+      <!-- Single Target -->
+      <a-entity id="target1" mindar-image-target="targetIndex: 0">
+        <a-plane material="src: #video1" position="0 0 0" height="0.59" width="1"></a-plane>
+      </a-entity>
+    </a-scene>
+
+    <div id="playPauseButtonContainer">
+      <button id="playPauseButton"></button>
+      <div id="playPauseText">Play with Sound</div>
+    </div>
+
+    <script>
+      const video = document.querySelector('#video1');
+      let isPlaying = false;  // To track play state
+
+      const button = document.querySelector('#playPauseButton');
+      const buttonText = document.querySelector('#playPauseText');
+
+      button.addEventListener('click', function () {
+        if (video.paused) {
+          video.muted = false;  // Unmute the video
+          video.play();  // Play the video
+          button.style.backgroundImage = "url('https://cdn-icons-png.flaticon.com/512/109/109197.png')";
+          buttonText.textContent = 'Pause';
+          isPlaying = true;
+        } else {
+          video.pause();  // Pause the video
+          buttonText.textContent = 'Play with Sound';
+          isPlaying = false;
+        }
+      });
+
+      // Helper to pause video when target is lost
+      const pauseVideo = () => {
+        if (isPlaying) {
+          video.pause();
+          video.muted = true;
+          buttonText.textContent = 'Play with Sound';
+          isPlaying = false;
+        }
+      };
+
+      // Add event listeners for target found and lost
+      const target = document.querySelector('#target1');
+
+      target.addEventListener('targetFound', () => {
+        if (isPlaying) {
+          video.play();
+        }
+      });
+     
+
+
+      target.addEventListener('targetLost', () => {
+        pauseVideo();
+      });
+    </script>
+  </body>
+</html>
