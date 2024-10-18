@@ -12,25 +12,54 @@
         z-index: 999;
       }
 
+      /* Apply the same style to Play with Sound button as Click Me */
       #playPauseButton {
-        width: 50px;
-        height: 50px;
-        background: url('https://cdn-icons-png.flaticon.com/512/109/109197.png') no-repeat center center;
-        background-size: contain;
-        border: 2px solid #ffffff;
-        border-radius: 30%;
+        background-color: #FFAA33;
+        color: black;
+        border: none;
+        padding: 10px 20px;
+        font-size: 16px;
         cursor: pointer;
-        outline: none;
+        border-radius: 5px;
+        font-weight: bold;
+        text-decoration: none;
+        display: inline-block;
       }
 
       #playPauseButton:hover {
-        background-color: rgba(0, 0, 0, 0.3);
+        background-color: darkorange;
       }
 
       #playPauseText {
         margin-top: 5px;
         font-size: 14px;
         color: #ffffff;
+      }
+
+      /* Yellow button on bottom left */
+      #customButtonContainer {
+        position: absolute;
+        bottom: 20px;
+        left: 20px;
+        text-align: center;
+        z-index: 999;
+      }
+
+      #customButton {
+        background-color: #FFAA33;
+        color: black;
+        border: none;
+        padding: 10px 20px;
+        font-size: 16px;
+        cursor: pointer;
+        border-radius: 5px;
+        font-weight: bold;
+        text-decoration: none;
+        display: inline-block;
+      }
+
+      #customButton:hover {
+        background-color: darkorange;
       }
 
       /* Hide the VR button */
@@ -59,9 +88,16 @@
       </a-entity>
     </a-scene>
 
+    <!-- Play with Sound button styled like Click Me -->
     <div id="playPauseButtonContainer">
-      <button id="playPauseButton"></button>
-      <div id="playPauseText">Play with Sound</div>
+      <button id="playPauseButton">Play with Sound</button>
+    </div>
+
+    <!-- Click Me button -->
+    <div id="customButtonContainer">
+      <a href="https://varsha-sarees-bangalore.odoo.com/" target="_blank">
+        <button id="customButton">WEBSITE</button>
+      </a>
     </div>
 
     <script>
@@ -69,18 +105,17 @@
       let isPlaying = false;  // To track play state
 
       const button = document.querySelector('#playPauseButton');
-      const buttonText = document.querySelector('#playPauseText');
+      const buttonText = document.querySelector('#playPauseButton');
 
       button.addEventListener('click', function () {
         if (video.paused) {
           video.muted = false;  // Unmute the video
           video.play();  // Play the video
-          button.style.backgroundImage = "url('https://cdn-icons-png.flaticon.com/512/109/109197.png')";
-          buttonText.textContent = 'Pause';
+          button.textContent = 'Pause';
           isPlaying = true;
         } else {
           video.pause();  // Pause the video
-          buttonText.textContent = 'Play with Sound';
+          button.textContent = 'Play with Sound';
           isPlaying = false;
         }
       });
@@ -90,7 +125,7 @@
         if (isPlaying) {
           video.pause();
           video.muted = true;
-          buttonText.textContent = 'Play with Sound';
+          button.textContent = 'Play with Sound';
           isPlaying = false;
         }
       };
@@ -103,8 +138,6 @@
           video.play();
         }
       });
-     
-
 
       target.addEventListener('targetLost', () => {
         pauseVideo();
